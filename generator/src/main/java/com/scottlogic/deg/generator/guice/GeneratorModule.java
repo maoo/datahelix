@@ -68,6 +68,9 @@ public class GeneratorModule extends AbstractModule {
         bind(long.class)
             .annotatedWith(Names.named("config:maxRows"))
             .toInstance(generationConfigSource.getMaxRows());
+        bind(int.class)
+            .annotatedWith(Names.named("config:internalRandomRowSpecStorage"))
+            .toInstance(128);
 
         // Bind known implementations - no user input required
         bind(DataGeneratorMonitor.class).to(ReductiveDataGeneratorMonitor.class);
