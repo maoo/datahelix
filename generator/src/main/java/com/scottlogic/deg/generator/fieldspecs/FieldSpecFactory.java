@@ -102,7 +102,9 @@ public class FieldSpecFactory {
             );
         }
 
-        return FieldSpec.Empty.withWhitelist(constraint.legalValues);
+        return FieldSpec.Empty
+            .withWhitelist(constraint.legalValues)
+            .withNotNull();
     }
 
     private FieldSpec construct(EqualToConstraint constraint, boolean negate) {
