@@ -23,7 +23,6 @@ import com.scottlogic.deg.generator.config.detail.*;
 import com.scottlogic.deg.orchestrator.guice.AllConfigSource;
 import com.scottlogic.deg.orchestrator.guice.AllModule;
 import com.scottlogic.deg.output.guice.OutputFormat;
-import com.scottlogic.deg.profile.v0_1.AtomicConstraintType;
 import picocli.CommandLine;
 
 import java.io.File;
