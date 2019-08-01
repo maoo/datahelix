@@ -17,12 +17,16 @@ package com.scottlogic.deg.profile.v0_1;
 
 import com.scottlogic.deg.common.ValidationException;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 public class SchemaVersionValidator {
     private String directoryContainingSchemas;
@@ -37,7 +41,31 @@ public class SchemaVersionValidator {
     }
 
     private void validateSchemaVersion(String schemaVersion) {
-        List<String> supportedSchemaVersions = getSupportedSchemaVersions();
+        List<String> supportedSchemaVersions = new ArrayList<>();
+        final String path = "profileschema";
+        final File jarFile = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
+
+        try {
+            // Taken from https://stackoverflow.com/a/20073154/
+            if (jarFile.isFile()) {  // Run with JAR file
+                final JarFile jar = new JarFile(jarFile);
+                final Enumeration<JarEntry> entries = jar.entries(); //gives ALL entries in jar
+                while (entries.hasMoreElements()) {
+                    final String name = entries.nextElement().getName();
+                    if (name.startsWith(path + "/")) { //filter according to the path
+                        if (name.split("/").length == 2) {
+                            supportedSchemaVersions.add(name.split("/")[1]);
+                        }
+                    }
+                }
+                jar.close();
+            } else {
+                supportedSchemaVersions = getSupportedSchemaVersions();
+            }
+        } catch (IOException e) {
+
+        }
+
         if (!supportedSchemaVersions.contains(schemaVersion)) {
             String errorMessage = "This version of the generator does not support v" +
                 schemaVersion +
