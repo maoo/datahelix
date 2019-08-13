@@ -18,10 +18,15 @@ package com.scottlogic.deg.profile.v0_1;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import com.scottlogic.deg.profile.serialisation.SchemaVersionGetter;
+import com.sun.javafx.geom.transform.Identity;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class NoValidationVersionChecker implements SchemaVersionValidator {
     private final SchemaVersionGetter schemaVersionGetter;
@@ -42,9 +47,42 @@ public class NoValidationVersionChecker implements SchemaVersionValidator {
     @Override
     public URL getSchemaFile() throws IOException {
         String schemaVersion = schemaVersionGetter.getSchemaVersionOfJson(profile.toPath());
-        return this.getClass().getResource(
+        URL exactMatchSchemaVersion = this.getClass().getResource(
             "/profileschema/" +
             schemaVersion +
             "/datahelix.schema.json");
+        if (exactMatchSchemaVersion != null) {
+            return exactMatchSchemaVersion;
+        } else {
+            return getDefaultSchemaVersion();
+        }
+    }
+
+    private URL getDefaultSchemaVersion() {
+        List<String> schemaVersions = getSupportedSchemaVersionsFromResources();
+        String highestVersion = schemaVersions.stream().reduce("0", (a, b) -> {
+            if (Double.parseDouble(a) < Double.parseDouble(b)) {
+                return b;
+            } else {
+                return a;
+            }
+        });
+        return this.getClass().getResource(
+        "/profileschema/" +
+            highestVersion +
+            "/datahelix.schema.json");
+    }
+
+    private List<String> getSupportedSchemaVersionsFromResources() {
+        String directoryContainingSchemas = this.getClass().getResource("/profileschema").getPath();
+        File file = new File(directoryContainingSchemas);
+        String[] directoriesArray = file.list((current, name) -> new File(current, name).isDirectory());
+        List<String> directories;
+        if (directoriesArray != null) {
+            directories = Arrays.asList(directoriesArray);
+        } else {
+            directories = new ArrayList<>();
+        }
+        return directories;
     }
 }
