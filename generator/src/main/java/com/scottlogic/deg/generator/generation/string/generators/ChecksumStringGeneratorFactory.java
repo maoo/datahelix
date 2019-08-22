@@ -17,6 +17,8 @@ package com.scottlogic.deg.generator.generation.string.generators;
 
 import com.scottlogic.deg.generator.utils.FinancialCodeUtils;
 
+import static com.scottlogic.deg.common.profile.constraints.atomic.StandardConstraintTypes.ISIN;
+
 public class ChecksumStringGeneratorFactory {
 
     public static StringGenerator createSedolGenerator() {
@@ -32,8 +34,9 @@ public class ChecksumStringGeneratorFactory {
     }
 
     public static StringGenerator createIsinGenerator() {
-        return new ChecksumStringGenerator(
-            new ChecksumlessIsinGenerator(),
-            FinancialCodeUtils::calculateIsinCheckDigit);
+        return new IsinTestGen(new RegexStringGenerator(ISIN.getRegex(), true), FinancialCodeUtils::calculateIsinCheckDigit);
+//        return new ChecksumStringGenerator(
+//            new ChecksumlessIsinGenerator(),
+//            FinancialCodeUtils::calculateIsinCheckDigit);
     }
 }
