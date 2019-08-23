@@ -17,10 +17,7 @@
 package com.scottlogic.deg.generator.restrictions;
 
 import com.scottlogic.deg.common.profile.constraints.atomic.StandardConstraintTypes;
-import com.scottlogic.deg.generator.generation.string.generators.IsinTestGen;
-import com.scottlogic.deg.generator.generation.string.generators.NoStringsStringGenerator;
-import com.scottlogic.deg.generator.generation.string.generators.RegexStringGenerator;
-import com.scottlogic.deg.generator.generation.string.generators.StringGenerator;
+import com.scottlogic.deg.generator.generation.string.generators.*;
 import com.scottlogic.deg.generator.utils.FinancialCodeUtils;
 
 import static com.scottlogic.deg.generator.generation.string.generators.ChecksumStringGeneratorFactory.*;
@@ -78,9 +75,9 @@ public class MatchesStandardStringRestrictions implements StringRestrictions{
 
     private MergeResult<StringRestrictions> isLengthAcceptable(TextualRestrictions other) {
         if (anyRegexes(other)){
-            if (this.createGenerator() instanceof IsinTestGen) {
-                RegexStringGenerator intersect = (RegexStringGenerator) ((IsinTestGen) this.createGenerator()).getRegexStringGenerator().intersect(other.createGenerator());
-                IsinTestGen isin = new IsinTestGen(intersect, FinancialCodeUtils::calculateIsinCheckDigit);
+            if (this.createGenerator() instanceof ChecksumStringGenerator) {
+                RegexStringGenerator intersect = (RegexStringGenerator) ((ChecksumStringGenerator) this.createGenerator()).getApproximatingGenerator().intersect(other.createGenerator());
+                ChecksumStringGenerator isin = new ChecksumStringGenerator(intersect, FinancialCodeUtils::calculateIsinCheckDigit, this.createGenerator());
                 MatchesStandardStringRestrictions matchesStandardStringRestrictions = new MatchesStandardStringRestrictions(type);
                 matchesStandardStringRestrictions.generator = isin;
                 return new MergeResult<>(matchesStandardStringRestrictions);

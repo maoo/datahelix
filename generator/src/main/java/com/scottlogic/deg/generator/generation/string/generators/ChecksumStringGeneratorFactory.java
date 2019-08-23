@@ -23,18 +23,23 @@ public class ChecksumStringGeneratorFactory {
 
     public static StringGenerator createSedolGenerator() {
         return new ChecksumStringGenerator(
-            new RegexStringGenerator("[B-DF-HJ-NP-TV-Z0-9]{6}", true),
-            FinancialCodeUtils::calculateSedolCheckDigit);
+            new RegexStringGenerator("[B-DF-HJ-NP-TV-Z0-9]{6}[0-9]", true),
+            FinancialCodeUtils::calculateSedolCheckDigit,
+            new RegexStringGenerator("[B-DF-HJ-NP-TV-Z0-9]{6}", true));
     }
 
     public static StringGenerator createCusipGenerator() {
         return new ChecksumStringGenerator(
-            new RegexStringGenerator("[0-9]{3}[0-9A-Z]{5}", true),
-            FinancialCodeUtils::calculateCusipCheckDigit);
+            new RegexStringGenerator("[0-9]{3}[0-9A-Z]{5}[0-9]", true),
+            FinancialCodeUtils::calculateCusipCheckDigit,
+            new RegexStringGenerator("[0-9]{3}[0-9A-Z]{5}", true));
     }
 
     public static StringGenerator createIsinGenerator() {
-        return new IsinTestGen(new RegexStringGenerator(ISIN.getRegex(), true), FinancialCodeUtils::calculateIsinCheckDigit);
+        return new ChecksumStringGenerator(
+            new RegexStringGenerator(ISIN.getRegex(), true),
+            FinancialCodeUtils::calculateIsinCheckDigit,
+            new ChecksumlessIsinGenerator());
 //        return new ChecksumStringGenerator(
 //            new ChecksumlessIsinGenerator(),
 //            FinancialCodeUtils::calculateIsinCheckDigit);

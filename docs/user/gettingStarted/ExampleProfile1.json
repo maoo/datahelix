@@ -2,30 +2,27 @@
   "schemaVersion": "0.1",
   "fields": [
     {
-      "name": "Column 1"
-    },
-    {
-      "name": "Column 2"
+      "name": "isin"
     }
   ],
   "rules": [
     {
-      "rule": "Column 1 is a string",
       "constraints": [
         {
-          "field": "Column 1",
+          "field": "isin",
           "is": "ofType",
-          "value": "string"
-        }
-      ]
-    },
-    {
-      "rule": "Column 2 is a number",
-      "constraints": [
+          "value": "ISIN"
+        },
         {
-          "field": "Column 2",
-          "is": "ofType",
-          "value": "integer"
+          "not": {
+            "field": "isin",
+            "is": "null"
+          }
+        },
+        {
+          "field": "isin",
+          "is": "matchingRegex",
+          "value": "GB000056650.*"
         }
       ]
     }
