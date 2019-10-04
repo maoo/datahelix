@@ -6,6 +6,7 @@ import com.scottlogic.deg.common.profile.constraintdetail.ParsedDateGranularity;
 import com.scottlogic.deg.common.profile.constraintdetail.ParsedGranularity;
 import com.scottlogic.deg.common.profile.Types;
 import com.scottlogic.deg.common.util.Defaults;
+import com.scottlogic.deg.common.util.DtoTypes;
 import com.scottlogic.deg.common.util.NumberUtils;
 import com.scottlogic.deg.generator.fieldspecs.whitelist.DistributedList;
 import com.scottlogic.deg.common.profile.constraintdetail.AtomicConstraintType;
@@ -135,7 +136,7 @@ public class ConstraintValueValidator {
     }
 
     private static void validateOfTypes(Field field, Object value) {
-        OfTypeConstraintFactory.create(field, (String)value);
+        OfTypeConstraintFactory.create(field, (DtoTypes) value);
     }
 
     private static void validatePattern(Object value) {

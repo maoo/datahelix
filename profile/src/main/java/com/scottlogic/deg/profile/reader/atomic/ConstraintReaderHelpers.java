@@ -17,6 +17,7 @@
 package com.scottlogic.deg.profile.reader.atomic;
 
 import com.scottlogic.deg.common.profile.Types;
+import com.scottlogic.deg.common.util.DtoTypes;
 import com.scottlogic.deg.profile.reader.InvalidProfileException;
 
 import java.time.LocalDateTime;
@@ -60,23 +61,23 @@ public class ConstraintReaderHelpers {
         }
     }
 
-    public static Types getFieldType(String type) {
+    public static Types getFieldType(DtoTypes type) {
         switch (type) {
-            case "decimal":
-            case "integer":
-                return Types.NUMERIC;
+            case DECIMAL:
+            case INTEGER:
+                return type.getTypeMapping();
 
-            case "string":
-            case "ISIN":
-            case "SEDOL":
-            case "CUSIP":
-            case "RIC":
-            case "firstname":
-            case "lastname":
-            case "fullname":
+            case STRING:
+            case ISIN:
+            case SEDOL:
+            case CUSIP:
+            case RIC:
+            case FIRSTNAME:
+            case LASTNAME:
+            case FULLNAME:
                 return Types.STRING;
 
-            case "datetime":
+            case DATETIME:
                 return Types.DATETIME;
         }
 
