@@ -2,6 +2,7 @@ package com.scottlogic.deg.profile.reader.atomic;
 
 import com.scottlogic.deg.common.profile.Field;
 import com.scottlogic.deg.common.profile.constraintdetail.NumericGranularityFactory;
+import com.scottlogic.deg.common.util.DtoTypes;
 import com.scottlogic.deg.generator.profile.constraints.Constraint;
 import com.scottlogic.deg.common.util.NumberUtils;
 import com.scottlogic.deg.generator.fieldspecs.whitelist.DistributedList;
@@ -67,7 +68,10 @@ public class AtomicConstraintFactory {
                 return new RemoveFromTree();
 
             case IS_OF_TYPE: {
-                Optional<Constraint> constraint = OfTypeConstraintFactory.create(field, (String) value);
+                if (value instanceof String){
+                    value = DtoTypes.valueOf(((String) value).toUpperCase());
+                }
+                Optional<Constraint> constraint = OfTypeConstraintFactory.create(field, (DtoTypes)value);
                 return constraint.orElseGet(RemoveFromTree::new);
             }
 

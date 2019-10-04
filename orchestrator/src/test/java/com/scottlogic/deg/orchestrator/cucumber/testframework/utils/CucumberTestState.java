@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.scottlogic.deg.common.profile.Field;
 import com.scottlogic.deg.common.profile.Types;
+import com.scottlogic.deg.common.util.DtoTypes;
 import com.scottlogic.deg.generator.config.detail.CombinationStrategyType;
 import com.scottlogic.deg.generator.config.detail.DataGenerationType;
 import com.scottlogic.deg.common.profile.constraintdetail.AtomicConstraintType;
@@ -168,7 +169,7 @@ public class CucumberTestState {
             }).collect(Collectors.toList());
     }
 
-    public void setFieldType(String fieldName, String types) {
+    public void setFieldType(String fieldName, DtoTypes types) {
         profileFields = profileFields.stream()
             .map(fieldDTO -> {
                 if (fieldDTO.name.equals(fieldName)) {

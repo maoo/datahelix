@@ -5,6 +5,7 @@ import com.scottlogic.deg.common.profile.Field;
 import com.scottlogic.deg.common.profile.constraintdetail.NumericGranularityFactory;
 import com.scottlogic.deg.common.profile.Types;
 import com.scottlogic.deg.common.util.Defaults;
+import com.scottlogic.deg.common.util.DtoTypes;
 import com.scottlogic.deg.common.util.NumberUtils;
 import com.scottlogic.deg.generator.fieldspecs.whitelist.DistributedList;
 import com.scottlogic.deg.common.profile.constraintdetail.AtomicConstraintType;
@@ -46,7 +47,7 @@ public class ConstraintValueValidator {
                 validateSet(field, type, value);
                 break;
             case IS_OF_TYPE:
-                validateOfTypes(field, value);
+                validateOfTypes(field, (String)value);
                 break;
 
             case MATCHES_REGEX:
@@ -134,8 +135,8 @@ public class ConstraintValueValidator {
             .forEach(val->validateAny(field, type, val));
     }
 
-    private static void validateOfTypes(Field field, Object value) {
-        OfTypeConstraintFactory.create(field, (String)value);
+    private static void validateOfTypes(Field field, String value) {
+        OfTypeConstraintFactory.create(field, DtoTypes.valueOf(value.toUpperCase()));
     }
 
     private static void validatePattern(Object value) {

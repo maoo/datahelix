@@ -20,11 +20,13 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import com.scottlogic.deg.common.profile.*;
 import com.scottlogic.deg.common.profile.constraintdetail.AtomicConstraintType;
+import com.scottlogic.deg.common.util.DtoTypes;
 import com.scottlogic.deg.generator.profile.constraints.Constraint;
 import com.scottlogic.deg.generator.profile.Profile;
 import com.scottlogic.deg.generator.profile.Rule;
 import com.scottlogic.deg.generator.profile.RuleInformation;
 import com.scottlogic.deg.profile.dto.ConstraintDTO;
+import com.scottlogic.deg.profile.dto.FieldDTO;
 import com.scottlogic.deg.profile.serialisation.ProfileDeserialiser;
 import com.scottlogic.deg.profile.dto.ProfileDTO;
 
@@ -37,7 +39,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.scottlogic.deg.profile.reader.atomic.AtomicConstraintFactory.create;
-import static com.scottlogic.deg.profile.reader.atomic.ConstraintReaderHelpers.getFieldType;
 
 /**
  * JsonProfileReader is responsible for reading and validating a profile from a path to a profile JSON file.
@@ -72,13 +73,13 @@ public class JsonProfileReader implements ProfileReader {
         }
 
         //This is the types of the field that have not been set by the field def
-        Map<String, String> fieldTypes = getTypesFromConstraints(profileDto);
+        Map<String, DtoTypes> fieldTypes = getTypesFromConstraints(profileDto);
 
         List<Field> inMapFields = getInMapConstraints(profileDto).stream()
             .map(file ->
                 new Field(
                     file,
-                    getFieldType("integer"),
+                    Types.NUMERIC,
                     false,
                     null,
                     true)
@@ -89,7 +90,7 @@ public class JsonProfileReader implements ProfileReader {
             .map(fDto ->
                 new Field(
                     fDto.name,
-                    getFieldType(fieldTypes.getOrDefault(fDto.name, fDto.type)),
+                    getFieldType(fieldTypes, fDto),
                     fDto.unique,
                     fDto.formatting,
                     false)
@@ -130,11 +131,28 @@ public class JsonProfileReader implements ProfileReader {
 
         return new Profile(profileFields, rules, profileDto.description);
     }
-    private Map<String, String> getTypesFromConstraints(ProfileDTO profileDto) {
+
+    private Types getFieldType(Map<String, DtoTypes> fieldTypes, FieldDTO fDto) {
+        DtoTypes dtoTypes = fieldTypes.getOrDefault(fDto.name, fDto.type);
+        if (dtoTypes == null) {
+            return null;
+        }
+        return dtoTypes.getTypeMapping();
+    }
+
+    private Map<String, DtoTypes> getTypesFromConstraints(ProfileDTO profileDto) {
         return getTopLevelConstraintsOfType(profileDto, AtomicConstraintType.IS_OF_TYPE.getText())
             .collect(Collectors.toMap(
                 constraintDTO -> constraintDTO.field,
-                constraintDTO -> (String)constraintDTO.value,
+                constraintDTO -> {
+                    try {
+                        return DtoTypes.valueOf(((String)constraintDTO.value).toUpperCase());
+                    } catch (IllegalArgumentException e) {
+                        throw new InvalidProfileException(
+                            "Profile is invalid: no type known for " + (String)constraintDTO.value
+                        );
+                    }
+                },
                 (a, b) -> a
             ));
     }

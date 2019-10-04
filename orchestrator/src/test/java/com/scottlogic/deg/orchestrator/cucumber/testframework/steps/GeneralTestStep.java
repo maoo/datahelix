@@ -17,6 +17,8 @@
 package com.scottlogic.deg.orchestrator.cucumber.testframework.steps;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.scottlogic.deg.common.util.DtoTypes;
 import com.scottlogic.deg.generator.config.detail.CombinationStrategyType;
 import com.scottlogic.deg.generator.config.detail.DataGenerationType;
 import com.scottlogic.deg.orchestrator.cucumber.testframework.utils.*;
@@ -27,12 +29,12 @@ import cucumber.api.java.en.*;
 import org.hamcrest.Matcher;
 import org.junit.Assert;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.scottlogic.deg.profile.reader.atomic.ConstraintReaderHelpers.getFieldType;
 import static org.hamcrest.Matchers.*;
 
 public class GeneralTestStep {
@@ -263,8 +265,9 @@ public class GeneralTestStep {
     }
 
     @And("^(.+) has type \"(.+)\"$")
-    public void fooHasType(String fieldName, String type) {
-        state.setFieldType(fieldName, type);
+    public void fooHasType(String fieldName, String type) throws IOException {
+        DtoTypes dtoTypes = DtoTypes.valueOf(type.toUpperCase());
+        state.setFieldType(fieldName, dtoTypes);
     }
 
     class GeneratedTestData {
