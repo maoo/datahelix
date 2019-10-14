@@ -55,4 +55,12 @@ public enum SpecificFieldType
                 throw new IllegalStateException("No data types with type " + type);
         }
     }
+
+    public String getDefaultFormatting() {
+        switch (type) {
+            case "date": return "%tF";
+            default:
+                return null;
+        }
+    }
 }
