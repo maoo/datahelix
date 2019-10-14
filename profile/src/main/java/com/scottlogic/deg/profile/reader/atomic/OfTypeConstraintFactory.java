@@ -2,12 +2,14 @@ package com.scottlogic.deg.profile.reader.atomic;
 
 import com.scottlogic.deg.common.profile.Field;
 import com.scottlogic.deg.common.profile.SpecificFieldType;
+import com.scottlogic.deg.common.profile.constraintdetail.DateTimeGranularity;
 import com.scottlogic.deg.common.profile.constraintdetail.NumericGranularityFactory;
 import com.scottlogic.deg.generator.profile.constraints.Constraint;
 import com.scottlogic.deg.generator.profile.constraints.atomic.*;
 import com.scottlogic.deg.profile.reader.file.names.NameRetriever;
 
 import java.math.BigDecimal;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 public class OfTypeConstraintFactory {
@@ -25,6 +27,8 @@ public class OfTypeConstraintFactory {
             case LAST_NAME:
             case FULL_NAME:
                 return Optional.of(new IsInSetConstraint(field, NameRetriever.loadNamesFromFile(NameConstraintTypes.lookupProfileText(type.toLowerCase()))));
+            case DATE:
+                return Optional.of(new IsGranularToDateConstraint(field, new DateTimeGranularity(ChronoUnit.DAYS)));
             default:
                 return Optional.empty();
         }

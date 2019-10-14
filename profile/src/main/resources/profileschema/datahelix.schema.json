@@ -159,6 +159,7 @@
             "integer",
             "string",
             "datetime",
+            "date",
             "ISIN",
             "SEDOL",
             "CUSIP",
@@ -302,7 +303,7 @@
           "then": {
             "properties": {
               "value": {
-                "enum": ["decimal", "integer", "string", "datetime","ISIN","SEDOL","CUSIP","RIC","firstname","lastname","fullname"]
+                "enum": ["decimal", "integer", "string", "datetime","date","ISIN","SEDOL","CUSIP","RIC","firstname","lastname","fullname"]
               }
             }
           }
