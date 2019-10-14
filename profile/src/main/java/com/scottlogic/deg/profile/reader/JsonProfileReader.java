@@ -27,6 +27,7 @@ import com.scottlogic.deg.generator.profile.Rule;
 import com.scottlogic.deg.generator.profile.RuleInformation;
 import com.scottlogic.deg.generator.profile.constraints.Constraint;
 import com.scottlogic.deg.profile.dto.ConstraintDTO;
+import com.scottlogic.deg.profile.dto.FieldDTO;
 import com.scottlogic.deg.profile.dto.ProfileDTO;
 import com.scottlogic.deg.profile.reader.atomic.OfTypeConstraintFactory;
 import com.scottlogic.deg.profile.serialisation.ProfileDeserialiser;
@@ -82,7 +83,7 @@ public class JsonProfileReader implements ProfileReader {
 
 
         List<Field> fields = profileDto.fields.stream()
-            .map(fDto -> new Field(fDto.name, fDto.type.getFieldType(), fDto.unique, fDto.formatting,false))
+            .map(fDto -> new Field(fDto.name, fDto.type.getFieldType(), fDto.unique, getFormatting(fDto),false))
             .collect(Collectors.toList());
 
         fields.addAll(inMapFields);
@@ -118,6 +119,14 @@ public class JsonProfileReader implements ProfileReader {
             rules.add(new Rule(new RuleInformation("type-rules"), typeRules));
         }
         return new Profile(profileFields, rules, profileDto.description);
+    }
+
+    private String getFormatting(FieldDTO fDto) {
+        if (fDto.formatting != null) {
+            return fDto.formatting;
+        } else  {
+            return fDto.type.getDefaultFormatting();
+        }
     }
 
     private Set<String> getInMapConstraints(ProfileDTO profileDto) {
