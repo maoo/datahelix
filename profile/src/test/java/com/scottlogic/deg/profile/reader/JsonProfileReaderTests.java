@@ -1155,4 +1155,26 @@ public class JsonProfileReaderTests {
             }
         );
     }
+
+    @Test
+    public void shouldBeUsingSpecificFieldTypesDefaultFormatting() throws IOException {
+        givenJson("{\n" +
+            "    \"schemaVersion\": " + schemaVersion + "," +
+            "    \"fields\": [\n" +
+            "        {\n" +
+            "            \"name\": \"field1\",\n" +
+            "            \"type\": \"date\",\n" +
+            "            \"nullable\": false\n" +
+            "        }\n" +
+            "    ],\n" +
+            "    \"rules\": [\n" +
+            "    ]\n" +
+            "}");
+
+        expectFields(
+            field -> {
+                Assert.assertThat(field.name, equalTo("field1"));
+                Assert.assertEquals( "%tF", field.getFormatting());
+            });
+    }
 }
