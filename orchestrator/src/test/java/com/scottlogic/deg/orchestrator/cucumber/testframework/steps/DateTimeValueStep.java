@@ -27,23 +27,23 @@ import cucumber.api.java.en.When;
 import java.time.OffsetDateTime;
 import java.util.function.Function;
 
-public class DateValueStep {
+public class DateTimeValueStep {
 
-    public static final String DATE_REGEX = "(-?(\\d{4,19})-(\\d{2})-(\\d{2}T(\\d{2}:\\d{2}:\\d{2}\\.\\d{3}))Z?)";
+    public static final String DATETIME_REGEX = "(-?(\\d{4,19})-(\\d{2})-(\\d{2}T(\\d{2}:\\d{2}:\\d{2}\\.\\d{3}))Z?)";
     private final CucumberTestState state;
     private final CucumberTestHelper helper;
 
-    public DateValueStep(CucumberTestState state, CucumberTestHelper helper){
+    public DateTimeValueStep(CucumberTestState state, CucumberTestHelper helper){
         this.state = state;
         this.helper = helper;
     }
 
-    @When("{fieldVar} is {operator} {date}")
+    @When("{fieldVar} is {operator} {datetime}")
     public void whenFieldIsConstrainedByDateValue(String fieldName, String constraintName, String value) {
         state.addConstraint(fieldName, constraintName, value);
     }
 
-    @When("{fieldVar} is anything but {operator} {date}")
+    @When("{fieldVar} is anything but {operator} {datetime}")
     public void whenFieldIsNotConstrainedByDateValue(String fieldName, String constraintName, String value) {
         state.addNotConstraint(fieldName, constraintName, value);
     }
@@ -83,7 +83,7 @@ public class DateValueStep {
         helper.assertFieldContainsNullOrNotMatching(fieldName, OffsetDateTime.class);
     }
 
-    @Then("{fieldVar} contains datetimes between {date} and {date} inclusively")
+    @Then("{fieldVar} contains datetimes between {datetime} and {datetime} inclusively")
     public void producedDataShouldContainDateTimeValuesInRangeForField(String fieldName,  String minInclusive, String maxInclusive){
         helper.assertFieldContainsNullOrMatching(
             fieldName,
@@ -91,7 +91,7 @@ public class DateValueStep {
             isBetweenInclusively(minInclusive, maxInclusive));
     }
 
-    @Then("{fieldVar} contains datetimes outside {date} and {date}")
+    @Then("{fieldVar} contains datetimes outside {datetime} and {datetime}")
     public void producedDataShouldContainDateTimeValuesOutOfRangeForField(String fieldName, String min, String max){
         helper.assertFieldContainsNullOrMatching(
             fieldName,
@@ -99,7 +99,7 @@ public class DateValueStep {
             value -> !isBetweenInclusively(min, max).apply(value));
     }
 
-    @Then("{fieldVar} contains datetimes before or at {date}")
+    @Then("{fieldVar} contains datetimes before or at {datetime}")
     public void producedDataShouldContainDateTimeValuesBeforeForField(String fieldName, String beforeInclusive){
         helper.assertFieldContainsNullOrMatching(
             fieldName,
@@ -107,7 +107,7 @@ public class DateValueStep {
             value -> isBeforeOrAt(value, beforeInclusive));
     }
 
-    @Then("{fieldVar} contains datetimes after or at {date}")
+    @Then("{fieldVar} contains datetimes after or at {datetime}")
     public void producedDataShouldContainDateTimeValuesAfterForField(String fieldName, String afterInclusive){
         helper.assertFieldContainsNullOrMatching(
             fieldName,

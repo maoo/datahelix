@@ -64,8 +64,8 @@ public class TypeRegistryConfiguration implements TypeRegistryConfigurer {
             (Transformer<Boolean>) Boolean::valueOf));
 
         tr.defineParameterType(new ParameterType<>(
-            "date",
-            DateValueStep.DATE_REGEX,
+            "datetime",
+            DateTimeValueStep.DATETIME_REGEX,
             String.class,
             this::extractConstraint));
     }
