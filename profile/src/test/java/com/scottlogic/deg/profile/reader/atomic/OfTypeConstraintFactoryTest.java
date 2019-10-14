@@ -20,12 +20,14 @@ package com.scottlogic.deg.profile.reader.atomic;
 import com.scottlogic.deg.common.profile.Field;
 import com.scottlogic.deg.common.profile.FieldBuilder;
 import com.scottlogic.deg.common.profile.SpecificFieldType;
+import com.scottlogic.deg.common.profile.constraintdetail.DateTimeGranularity;
 import com.scottlogic.deg.generator.profile.constraints.Constraint;
 import com.scottlogic.deg.generator.profile.constraints.atomic.*;
 import com.scottlogic.deg.common.profile.constraintdetail.NumericGranularity;
 import com.scottlogic.deg.profile.reader.file.names.NameRetriever;
 import org.junit.jupiter.api.Test;
 
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -64,5 +66,12 @@ class OfTypeConstraintFactoryTest {
 
         assertTrue(constraint.isPresent());
         assertEquals((constraint.get()), isInSetConstraint);
+    }
+
+    @Test
+    void returnsIsGranularToDayConstraintWhenPassedDate() {
+        Optional<Constraint> constraint = OfTypeConstraintFactory.create(field,SpecificFieldType.DATE);
+        assertTrue(constraint.isPresent());
+        assertEquals(new DateTimeGranularity(ChronoUnit.DAYS), ((IsGranularToDateConstraint) constraint.get()).granularity);
     }
 }
