@@ -3,7 +3,7 @@
   "fields": [
     {
       "name": "date",
-      "type": "datetime",
+      "type": "date",
       "nullable": false
     }
   ],
@@ -13,7 +13,7 @@
         {
           "field": "date",
           "is": "equalTo",
-          "value": "2001-02-03T04:05:06.007"
+          "value": "2001-02-03"
         }
       ]
     }
