@@ -16,7 +16,6 @@
 
 package com.scottlogic.deg.profile.reader.atomic;
 
-import com.scottlogic.deg.common.profile.FieldType;
 import com.scottlogic.deg.common.profile.constraintdetail.DateTimeGranularity;
 import com.scottlogic.deg.profile.reader.InvalidProfileException;
 
@@ -35,62 +34,43 @@ public class ConstraintReaderHelpers {
 
     private static final OffsetDateTime NOW = OffsetDateTime.now();
 
-    public static OffsetDateTime parseDate(String value) {
+    static OffsetDateTime parseDate(String value) {
         if (value.toUpperCase().equals("NOW")) {
             return NOW;
         }
 
-        DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+        DateTimeFormatter dateFormat = new DateTimeFormatterBuilder()
+            .appendPattern("u-MM-dd")
+            .parseDefaulting(ChronoField.SECOND_OF_DAY,0)
+            .toFormatter();
+
+        DateTimeFormatter dateTimeFormatter = new DateTimeFormatterBuilder()
             .append(DateTimeFormatter.ofPattern("u-MM-dd'T'HH:mm:ss'.'SSS"))
             .optionalStart()
             .appendOffset("+HH", "Z")
+            .toFormatter();
+
+        DateTimeFormatter dateOrDateTimeFormatter = new DateTimeFormatterBuilder()
+            .appendOptional(dateTimeFormatter)
+            .appendOptional(dateFormat)
             .toFormatter()
             .withResolverStyle(ResolverStyle.STRICT);
 
         try {
-            TemporalAccessor temporalAccessor = formatter.parse(value);
-
+            TemporalAccessor temporalAccessor = dateOrDateTimeFormatter.parse(value);
             return temporalAccessor.isSupported(ChronoField.OFFSET_SECONDS)
                 ? OffsetDateTime.from(temporalAccessor)
                 : LocalDateTime.from(temporalAccessor).atOffset(ZoneOffset.UTC);
         } catch (DateTimeParseException dtpe) {
             throw new InvalidProfileException(String.format(
-                "Date string '%s' must be in ISO-8601 format: yyyy-MM-ddTHH:mm:ss.SSS[Z] between (inclusive) " +
-                    "0001-01-01T00:00:00.000Z and 9999-12-31T23:59:59.999Z",
+                "Date string '%s' must be in ISO-8601 format: Either yyyy-MM-ddTHH:mm:ss.SSS[Z] between (inclusive) " +
+                    "0001-01-01T00:00:00.000Z and 9999-12-31T23:59:59.999Z or yyyy-mm-dd between 0001-01-01 and 9999-12-31",
                 value
             ));
         }
     }
 
-    public static FieldType getFieldType(String type) {
-        if (type == null) {
-            return null;
-        }
-
-        switch (type) {
-            case "decimal":
-            case "integer":
-                return FieldType.NUMERIC;
-
-            case "string":
-            case "ISIN":
-            case "SEDOL":
-            case "CUSIP":
-            case "RIC":
-            case "firstname":
-            case "lastname":
-            case "fullname":
-                return FieldType.STRING;
-
-            case "datetime":
-                return FieldType.DATETIME;
-        }
-
-        throw new InvalidProfileException("Profile is invalid: no type known for " + type);
-
-    }
-  
-    public static DateTimeGranularity getDateTimeGranularity(String granularity) {
+    static DateTimeGranularity getDateTimeGranularity(String granularity) {
         String offsetUnitUpperCase = granularity.toUpperCase();
         boolean workingDay = offsetUnitUpperCase.equals("WORKING DAYS");
         return new DateTimeGranularity(
