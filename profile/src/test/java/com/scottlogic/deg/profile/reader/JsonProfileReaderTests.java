@@ -676,13 +676,13 @@ public class JsonProfileReaderTests {
                 "    \"rules\": [" +
                 "      {" +
                 "        \"constraints\": [" +
-                "        { \"field\": \"foo\", \"is\": \"after\", \"value\": \"2018-01-12\" }" +
+                "        { \"field\": \"foo\", \"is\": \"after\", \"value\": \"2018-01-12:10:01\" }" +
                 "        ]" +
                 "      }" +
                 "    ]" +
                 "}");
 
-        expectInvalidProfileException("Field [foo]: Date string '2018-01-12' must be in ISO-8601 format: yyyy-MM-ddTHH:mm:ss.SSS[Z] between (inclusive) 0001-01-01T00:00:00.000Z and 9999-12-31T23:59:59.999Z");
+        expectInvalidProfileException("Field [foo]: Date string '2018-01-12:10:01' must be in ISO-8601 format: Either yyyy-MM-ddTHH:mm:ss.SSS[Z] between 0001-01-01T00:00:00.000Z and 9999-12-31T23:59:59.999Z or yyyy-mm-dd between 0001-01-01 and 9999-12-31");
     }
 
     @Test
