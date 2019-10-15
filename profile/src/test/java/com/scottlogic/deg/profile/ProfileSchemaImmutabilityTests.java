@@ -94,6 +94,9 @@ public class ProfileSchemaImmutabilityTests {
         versionToHash.add(new VersionHash(
             "0.11",
             "eed1d1faaf4c8bb50144f3e72c2f14d56295c7d5da09a0dd6ed6266daee4a559"));
+        versionToHash.add(new VersionHash(
+            "0.12",
+            "82b72365262037d9ec5bcadae347ca611c3520f5083ba1d019cf852b7f2b947c"));
         return versionToHash;
     }
 
