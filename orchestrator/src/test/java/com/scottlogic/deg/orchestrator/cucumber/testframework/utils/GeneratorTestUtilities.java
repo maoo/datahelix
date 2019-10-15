@@ -39,7 +39,7 @@ public class GeneratorTestUtilities {
     public static Object parseInput(String input) throws JsonParseException {
         if (input.startsWith("\"") && input.endsWith("\"")) {
             return input.substring(1, input.length() - 1);
-        } else if (input.matches(DateTimeValueStep.DATETIME_REGEX)) {
+        } else if (input.matches(DateTimeValueStep.DATETIME_REGEX) || input.matches(DateTimeValueStep.DATE_REGEX)) {
             return input;
         } else if (input.equals("null")) {
             return null;
