@@ -284,7 +284,6 @@ public class ConstraintValidationAndReadingTests {
 
     @Test
     public void shouldRejectPartiallySpecifiedDateTimes(){
-        assertRejectedDateTimeParse("2010-01-01");
         assertRejectedDateTimeParse("2010-01-01T12:30:00");
     }
 
