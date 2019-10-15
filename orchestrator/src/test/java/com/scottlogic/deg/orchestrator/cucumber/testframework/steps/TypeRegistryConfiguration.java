@@ -68,6 +68,12 @@ public class TypeRegistryConfiguration implements TypeRegistryConfigurer {
             DateTimeValueStep.DATETIME_REGEX,
             String.class,
             this::extractConstraint));
+
+        tr.defineParameterType(new ParameterType<>(
+            "date",
+            DateTimeValueStep.DATE_REGEX,
+            String.class,
+            this::extractConstraint));
     }
 
     private void defineOperationParameterType(TypeRegistry tr){

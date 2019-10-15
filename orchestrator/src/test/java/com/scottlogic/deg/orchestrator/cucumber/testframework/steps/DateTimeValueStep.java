@@ -30,6 +30,7 @@ import java.util.function.Function;
 public class DateTimeValueStep {
 
     public static final String DATETIME_REGEX = "(-?(\\d{4,19})-(\\d{2})-(\\d{2}T(\\d{2}:\\d{2}:\\d{2}\\.\\d{3}))Z?)";
+    public static final String DATE_REGEX = "(-?(\\d{4,19})-(\\d{2})-(\\d{2}))";
     private final CucumberTestState state;
     private final CucumberTestHelper helper;
 
@@ -40,6 +41,11 @@ public class DateTimeValueStep {
 
     @When("{fieldVar} is {operator} {datetime}")
     public void whenFieldIsConstrainedByDateValue(String fieldName, String constraintName, String value) {
+        state.addConstraint(fieldName, constraintName, value);
+    }
+
+    @When("{fieldVar} is {operator} {date}")
+    public void whenFieldIsConstrainedByDateOnlyValue(String fieldName, String constraintName, String value) {
         state.addConstraint(fieldName, constraintName, value);
     }
 
