@@ -5,6 +5,7 @@ Q4 - 2019
   - add ability to configure a weighted distribution for user defined types
   - add ability for fields to depend on data in other fields, starting with date columns.  Eg DATE 1 = DATE 2 + N DAYS
   - gain some feature parity with other data generator tools
+
 - Goal 2 - Prove product with 6 key users
   - This will involve implementing new features that enable this which will get from feedback from new users
 
